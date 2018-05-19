@@ -5,7 +5,9 @@ const jwtSecret = process.env.JWT_SECRET || 'abc123';
 const google = {
   clientId: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  apiKey: process.env.GOOGLE_API_KEY
+  apiKey: process.env.GOOGLE_API_KEY,
+  siteKey: process.env.GOOGLE_SITE_KEY,
+  secretKey: process.env.GOOGLE_SECRET_KEY
 };
 
 const aws = {
