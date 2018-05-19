@@ -1,5 +1,5 @@
 const express = require('express');
-const request = require('request');
+const request = require('request-promise');
 
 const { secretKey } = require('../config').google;
 
@@ -20,9 +20,9 @@ module.exports = () => {
     };
     try {
       const response = await request(options);
-      return res.send({ response });
+      res.send(response);
     } catch (error) {
-      return res.send({ error });
+      res.send({ error });
     }
   });
 
