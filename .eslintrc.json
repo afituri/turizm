@@ -1,0 +1,17 @@
+{
+  "extends": "airbnb-base/legacy",
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "env": {
+    "es6": true
+  },
+  "rules": {
+    "no-underscore-dangle": 0,
+    "no-param-reassign": 0,
+    "class-methods-use-this": 0
+  }
+}
