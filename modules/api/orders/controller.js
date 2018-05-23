@@ -1,5 +1,9 @@
 const Service = require('./service');
+const shortid = require('shortid');
+
 // const mongoose = require('mongoose');
+
+const EmailService = require('../../../services/emailVerification');
 
 class OrdersAPIController {
   ordersIndex(req, res) {
@@ -38,8 +42,11 @@ class OrdersAPIController {
       travelDoc,
       arrivalDate,
       people,
-      familyStatement
+      familyStatement,
+      locale
     } = req.body;
+
+    console.log(applicationType, travelDoc, country, arrivalDate);
 
     if (!applicationType || !country || !travelDoc || !arrivalDate) {
       return res
@@ -73,9 +80,14 @@ class OrdersAPIController {
         country,
         travelDoc,
         people,
-        familyStatement
+        familyStatement,
+        locale,
+        refNum: shortid.generate()
       })
       .then(order => {
+        EmailService.sendOrderActivationCode(order, 'orderCreation');
+        order = order.toObject();
+        delete order.refNum;
         return res.status(201).send({ order });
       })
       .catch(e => {

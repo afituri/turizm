@@ -1,5 +1,5 @@
 const svc = require('../../../../services/emailVerification');
-const { feUrl } = require('../../../../config').addabba;
+const { feUrl } = require('../../../../config').evisa;
 const Service = require('../service');
 
 class PassresetVerification {

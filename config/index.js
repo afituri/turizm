@@ -18,8 +18,8 @@ const aws = {
   s3Region: process.env.S3_REGION || 'us-west-1'
 };
 
-const addabba = {
-  email: process.env.ADDABBA_EMAIL,
+const evisa = {
+  email: process.env.EVISA_EMAIL,
   apiUrl: process.env.API_URL,
   feUrl: process.env.FEURL
 };
@@ -30,8 +30,8 @@ const sendgrid = {
 };
 
 module.exports = {
-  addabba,
   aws,
+  evisa,
   google,
   host,
   jwtSecret,

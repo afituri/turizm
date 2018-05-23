@@ -74,19 +74,35 @@ class OrdersService {
     }
 
     if (!person.passportNumber) {
-      return { status: 400, error: 'You must provide passport number', code: 'missingPassportNumber' };
+      return {
+        status: 400,
+        error: 'You must provide passport number',
+        code: 'missingPassportNumber'
+      };
     }
 
     if (!person.passportIssueDate) {
-      return { status: 400, error: 'You must provide passport issue date', code: 'missingPassportIssueDate' };
+      return {
+        status: 400,
+        error: 'You must provide passport issue date',
+        code: 'missingPassportIssueDate'
+      };
     }
 
     if (!person.passportExpiryDate) {
-      return { status: 400, error: 'You must provide passport expiry date', code: 'missingPassportExpiryDate' };
+      return {
+        status: 400,
+        error: 'You must provide passport expiry date',
+        code: 'missingPassportExpiryDate'
+      };
     }
 
     if (!person.passportPhoto) {
-      return { status: 400, error: 'You must provide passport photo', code: 'missingPassportPhoto' };
+      return {
+        status: 400,
+        error: 'You must provide passport photo',
+        code: 'missingPassportPhoto'
+      };
     }
 
     if (!person.email) {

@@ -1,10 +1,10 @@
 {
   "development": {
-    "database": "addabba_development",
+    "database": "evisa_development",
     "host": "localhost"
   },
   "test": {
-    "database": "addabba_test",
+    "database": "evisa_test",
     "host": "localhost"
   },
   "production": {

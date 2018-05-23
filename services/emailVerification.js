@@ -1,30 +1,32 @@
-const { VerificationHash } = require('../models/mongoose');
 const EmailService = require('./email');
-const { addabba } = require('../config');
+const { evisa } = require('../config');
 const messages = require('../messages');
 const format = require('string-template');
 
 const createEmailOptions = (userData, type) => {
+  const {
+    email, name, refNum, locale
+  } = userData;
   let html;
   switch (type) {
-    case 'accountCreation':
-      html = format(messages.accountCreation[`html-${userData.locale}`], {
-        url: addabba.apiUrl,
-        hash: userData.verificationHash
+    case 'orderCreation':
+      html = format(messages.orderActivation[`html-${locale}`], {
+        name,
+        refNum
       });
       return {
-        from: `Addabba <${addabba.email}>`,
-        to: userData.email,
-        subject: messages.accountCreation[`subject-${userData.locale}`],
+        from: `Evisa Turizm <${evisa.email}>`,
+        to: email,
+        subject: messages.orderActivation[`subject-${locale}`],
         html
       };
     case 'passwordReset':
       html = format(messages.passwordReset[`html-${userData.locale}`], {
-        url: addabba.apiUrl,
+        url: evisa.apiUrl,
         hash: userData.verificationHash
       });
       return {
-        from: `Addabba <${addabba.email}>`,
+        from: `Evisa Turizm <${evisa.email}>`,
         to: userData.email,
         subject: messages.passwordReset[`subject-${userData.locale}`],
         html
@@ -35,26 +37,19 @@ const createEmailOptions = (userData, type) => {
 };
 
 class EmailVerificationService {
-  sendVerificationEmail(user, emailType) {
-    let { _id, email, locale } = user;
-    let hashedData = new VerificationHash({ hash: email, user: _id });
-    hashedData
-      .save((err, data) => {
-        let emailOptions = createEmailOptions(
-          {
-            verificationHash: data.verificationHash,
-            user: data.user,
-            locale,
-            email
-          },
-          emailType
-        );
-        return EmailService.send(emailOptions);
-      })
-      .then(() => {})
-      .catch(err => {
-        return err;
-      });
+  sendOrderActivationCode(order, emailType) {
+    let { email, givenNames, sureName } = order.people[0];
+    let { locale, refNum } = order;
+    let emailOptions = createEmailOptions(
+      {
+        locale,
+        email,
+        name: `${givenNames} ${sureName}`,
+        refNum
+      },
+      emailType
+    );
+    return EmailService.send(emailOptions);
   }
 }
 
