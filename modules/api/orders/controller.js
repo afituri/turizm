@@ -1,7 +1,6 @@
 const Service = require('./service');
 const shortid = require('shortid');
-
-// const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 const EmailService = require('../../../services/emailVerification');
 
@@ -94,6 +93,32 @@ class OrdersAPIController {
         console.log('\nError at POST /orders', e);
         return res.status(400).json({ error: e, code: 'unknownError' });
       });
+  }
+
+  async ordersActivate(req, res) {
+    const service = new Service(req);
+    const { id } = req.params;
+    const { refNum } = req.body;
+    let order;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID', code: 'invalidId' });
+    }
+
+    if (!refNum) {
+      return res.status(400).json({ error: 'Missing reference number', code: 'missingRefNum' });
+    }
+
+    try {
+      order = await service.fetchOrderById(id);
+      if (order.refNum !== refNum) {
+        return res.status(400).json({ error: 'Wrong reference number', code: 'wrongRefNum' });
+      }
+      order = await service.findByIdAndUpdate(id, { status: 'active' });
+      return res.status(200).json({ order });
+    } catch (e) {
+      return res.status(400).json({ error: e, code: 'unknownError' });
+    }
   }
 
   ordersUpdate(req, res) {

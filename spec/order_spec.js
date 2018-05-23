@@ -128,6 +128,23 @@ describe('Order', () => {
       }
     );
   });
+
+  it('activates an order', done => {
+    request.put(
+      {
+        url: `${apiUrl}/orders/${order._id}/activate`,
+        form: {
+          refNum: 'slsdkfj'
+        }
+      },
+      (err, res, body) => {
+        body = JSON.parse(body);
+        expect(res.statusCode).toBe(200);
+        expect(body.order.status).toBe('active');
+        done();
+      }
+    );
+  });
 });
 
 // ----------------------------------------

@@ -27,7 +27,7 @@ const OrderSchema = mongoose.Schema(
     refNum: { type: String, required: true },
     status: {
       type: String,
-      enum: ['open', 'active', 'canceled', 'completed', 'expired', 'blocked'],
+      enum: ['open', 'active', 'canceled', 'completed', 'expired', 'paid', 'rejected'],
       default: 'open',
       index: true
     }
