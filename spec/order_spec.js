@@ -1,7 +1,7 @@
 /* eslint-disable */
 // Disable all application logging while running tests
 
-console.log = function() {};
+//console.log = function() {};
 
 const app = require('../server');
 const request = require('request');
@@ -141,6 +141,96 @@ describe('Order', () => {
         body = JSON.parse(body);
         expect(res.statusCode).toBe(200);
         expect(body.order.status).toBe('active');
+        done();
+      }
+    );
+  });
+
+  it('adds a new person to an existing order', done => {
+    Order.findByIdAndUpdate(
+      order._id,
+      { status: 'active', applicationType: 'family', familyStatement: '/familyStatementPDF' },
+      { new: true }
+    ).then(order1 => {
+      request.post(
+        {
+          url: `${apiUrl}/orders/${order._id}/people`,
+          form: {
+            person: {
+              givenNames: 'Salma Ali',
+              sureName: 'Salem',
+              dob: moment({ years: 1986, months: 3, days: 5 }).toJSON(),
+              pob: 'Tripoli',
+              gender: 'female',
+              motherName: 'Sara',
+              fatherName: 'Omran',
+              passportNumber: 'L34UFKEX',
+              passportIssueDate: moment({ years: 2013, months: 3, days: 5 }).toJSON(),
+              passportExpiryDate: moment({ years: 2017, months: 3, days: 5 }).toJSON(),
+              passportPhoto: '/somephoto3',
+              email: 'ahmed.fituri@gmail.com',
+              phoneNumber: '00903883838835',
+              address: 'Some Address3',
+              photo: '/somephoto3'
+            }
+          }
+        },
+        (err, res, body) => {
+          body = JSON.parse(body);
+          expect(res.statusCode).toBe(201);
+          expect(body.order.applicationType).toBe('family');
+          expect(body.order.country).toBe('libya');
+          expect(body.order.travelDoc).toBe('ordinary');
+          expect(body.order.locale).toBe('ar');
+          expect(body.order.people[1].givenNames).toBe('Salma Ali');
+          expect(body.order.people[1].sureName).toBe('Salem');
+          expect(moment(body.order.people[1].dob).year()).toBe(1986);
+          expect(body.order.people[1].pob).toBe('Tripoli');
+          expect(body.order.people[1].gender).toBe('female');
+          expect(body.order.people[1].motherName).toBe('Sara');
+          expect(body.order.people[1].fatherName).toBe('Omran');
+          expect(body.order.people[1].passportNumber).toBe('L34UFKEX');
+          expect(moment(body.order.people[1].passportIssueDate).year()).toBe(2013);
+          expect(moment(body.order.people[1].passportExpiryDate).year()).toBe(2017);
+          expect(body.order.people[1].passportPhoto).toBe('/somephoto3');
+          expect(body.order.people[1].email).toBe('ahmed.fituri@gmail.com');
+          expect(body.order.people[1].phoneNumber).toBe('00903883838835');
+          expect(body.order.people[1].address).toBe('Some Address3');
+          expect(body.order.people[1].photo).toBe('/somephoto3');
+          done();
+        }
+      );
+    });
+  });
+
+  it('fails to add a person with status is inactive', done => {
+    request.post(
+      {
+        url: `${apiUrl}/orders/${order._id}/people`,
+        form: {
+          person: {
+            givenNames: 'Salma Ali',
+            sureName: 'Salem',
+            dob: moment({ years: 1986, months: 3, days: 5 }).toJSON(),
+            pob: 'Tripoli',
+            gender: 'female',
+            motherName: 'Sara',
+            fatherName: 'Omran',
+            passportNumber: 'L34UFKEX',
+            passportIssueDate: moment({ years: 2013, months: 3, days: 5 }).toJSON(),
+            passportExpiryDate: moment({ years: 2017, months: 3, days: 5 }).toJSON(),
+            passportPhoto: '/somephoto3',
+            email: 'ahmed.fituri@gmail.com',
+            phoneNumber: '00903883838835',
+            address: 'Some Address3',
+            photo: '/somephoto3'
+          }
+        }
+      },
+      (err, res, body) => {
+        body = JSON.parse(body);
+        expect(res.statusCode).toBe(400);
+        expect(body.code).toBe('notActive');
         done();
       }
     );

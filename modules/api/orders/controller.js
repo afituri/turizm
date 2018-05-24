@@ -45,8 +45,6 @@ class OrdersAPIController {
       locale
     } = req.body;
 
-    console.log(applicationType, travelDoc, country, arrivalDate);
-
     if (!applicationType || !country || !travelDoc || !arrivalDate) {
       return res
         .status(400)
@@ -116,6 +114,55 @@ class OrdersAPIController {
       }
       order = await service.findByIdAndUpdate(id, { status: 'active' });
       return res.status(200).json({ order });
+    } catch (e) {
+      return res.status(400).json({ error: e, code: 'unknownError' });
+    }
+  }
+
+  async addPerson(req, res) {
+    const service = new Service(req);
+    const { Person } = req.models;
+    const { id } = req.params;
+    const { person } = req.body;
+    let order;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID', code: 'invalidId' });
+    }
+
+    if (!person) {
+      return res
+        .status(400)
+        .json({ error: 'You must provide at least one person', code: 'missingPerson' });
+    }
+
+    const validatePerson = service.validatePerson(person);
+
+    if (validatePerson.error) {
+      return res
+        .status(validatePerson.status)
+        .json({ error: validatePerson.error, code: validatePerson.code });
+    }
+
+    try {
+      order = await service.fetchOrderById(id);
+
+      if (order.status !== 'active') {
+        return res
+          .status(400)
+          .json({ error: 'This application has not been activated yet.', code: 'notActive' });
+      }
+
+      if (!order.familyStatement) {
+        return res
+          .status(400)
+          .json({ error: 'You must provide a family statement', code: 'missingFamilyStatement' });
+      }
+      let personObj = new Person(person);
+      await personObj.save();
+      order.people.push(personObj);
+      await order.save();
+      return res.status(201).json({ order });
     } catch (e) {
       return res.status(400).json({ error: e, code: 'unknownError' });
     }

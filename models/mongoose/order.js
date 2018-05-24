@@ -21,13 +21,14 @@ const OrderSchema = mongoose.Schema(
       required: true
     },
     arrivalDate: { type: Date },
-    locale: { type: String, enum: ['ar', 'en', 'tr'] },
+    locale: { type: String, enum: ['ar', 'en', 'tr'], default: 'ar' },
     people: { type: [Person], default: [] },
     familyStatement: { type: String },
     refNum: { type: String, required: true },
+    paid: { type: Boolean, default: false },
     status: {
       type: String,
-      enum: ['open', 'active', 'canceled', 'completed', 'expired', 'paid', 'rejected'],
+      enum: ['open', 'active', 'processing', 'completed', 'expired', 'rejected'],
       default: 'open',
       index: true
     }
