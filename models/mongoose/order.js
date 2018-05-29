@@ -24,6 +24,10 @@ const OrderSchema = mongoose.Schema(
     locale: { type: String, enum: ['ar', 'en', 'tr'], default: 'ar' },
     people: { type: [Person], default: [] },
     familyStatement: { type: String },
+    bankStatement: { type: String },
+    workCertificate: { type: String },
+    hotelReservations: { type: String },
+    ownershipCertificate: { type: String },
     refNum: { type: String, required: true },
     paid: { type: Boolean, default: false },
     status: {

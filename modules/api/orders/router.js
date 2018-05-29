@@ -10,7 +10,6 @@ module.exports = () => {
     .post(controller.ordersCreate);
 
   router.route('/:id/activate').put(controller.ordersActivate);
-  router.route('/:id/people').post(controller.addPerson);
 
   router.route('/:id').get(controller.ordersShow);
 

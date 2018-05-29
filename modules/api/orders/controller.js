@@ -42,6 +42,10 @@ class OrdersAPIController {
       arrivalDate,
       people,
       familyStatement,
+      bankStatement,
+      workCertificate,
+      hotelReservations,
+      ownershipCertificate,
       locale
     } = req.body;
 
@@ -63,21 +67,39 @@ class OrdersAPIController {
         .json({ error: 'You must provide a family statement', code: 'missingFamilyStatement' });
     }
 
-    const validatePerson = service.validatePerson(people[0]);
+    const validatePeople = service.validatePeople(people);
 
-    if (validatePerson.error) {
+    if (validatePeople.error) {
       return res
-        .status(validatePerson.status)
-        .json({ error: validatePerson.error, code: validatePerson.code });
+        .status(validatePeople.status)
+        .json({ error: validatePeople.error, code: validatePeople.code });
     }
+
+    const validateAlgerian = service.validateAlgerian(applicationType, country, people[0].dob);
+
+    if (validateAlgerian.error) {
+      return res
+        .status(validateAlgerian.status)
+        .json({ error: validateAlgerian.error, code: validateAlgerian.code });
+    }
+
+    const peopleLst = people.map(person => {
+      return Object.assign({}, person, {
+        refNum: shortid.generate()
+      });
+    });
 
     return service
       .createOrder({
         applicationType,
         country,
         travelDoc,
-        people,
+        people: peopleLst,
         familyStatement,
+        bankStatement,
+        workCertificate,
+        hotelReservations,
+        ownershipCertificate,
         locale,
         refNum: shortid.generate()
       })
@@ -114,55 +136,6 @@ class OrdersAPIController {
       }
       order = await service.findByIdAndUpdate(id, { status: 'active' });
       return res.status(200).json({ order });
-    } catch (e) {
-      return res.status(400).json({ error: e, code: 'unknownError' });
-    }
-  }
-
-  async addPerson(req, res) {
-    const service = new Service(req);
-    const { Person } = req.models;
-    const { id } = req.params;
-    const { person } = req.body;
-    let order;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid ID', code: 'invalidId' });
-    }
-
-    if (!person) {
-      return res
-        .status(400)
-        .json({ error: 'You must provide at least one person', code: 'missingPerson' });
-    }
-
-    const validatePerson = service.validatePerson(person);
-
-    if (validatePerson.error) {
-      return res
-        .status(validatePerson.status)
-        .json({ error: validatePerson.error, code: validatePerson.code });
-    }
-
-    try {
-      order = await service.fetchOrderById(id);
-
-      if (order.status !== 'active') {
-        return res
-          .status(400)
-          .json({ error: 'This application has not been activated yet.', code: 'notActive' });
-      }
-
-      if (!order.familyStatement) {
-        return res
-          .status(400)
-          .json({ error: 'You must provide a family statement', code: 'missingFamilyStatement' });
-      }
-      let personObj = new Person(person);
-      await personObj.save();
-      order.people.push(personObj);
-      await order.save();
-      return res.status(201).json({ order });
     } catch (e) {
       return res.status(400).json({ error: e, code: 'unknownError' });
     }

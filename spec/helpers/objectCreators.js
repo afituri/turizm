@@ -20,6 +20,10 @@ module.exports = {
     country: 'libya',
     travelDoc: 'ordinary',
     arrivalDate: new Date(),
+    bankStatement: '/someBankStatement',
+    workCertificate: '/someWorkCertificate',
+    hotelReservations: '/someHotelReservations',
+    ownershipCertificate: '/someOwnershipCertificate',
     locale: 'ar',
     refNum: 'slsdkfj',
     people: [
@@ -38,7 +42,8 @@ module.exports = {
         email: 'myemail@email.com',
         phoneNumber: '00903883838833',
         address: 'Some Address',
-        photo: '/somephoto'
+        photo: '/somephoto',
+        refNum: 'slsdkfj'
       }
     ]
   }

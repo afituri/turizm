@@ -27,6 +27,7 @@ describe('Image', () => {
   });
 
   beforeEach(done => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000;
     done();
   });
 

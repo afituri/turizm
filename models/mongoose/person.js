@@ -8,7 +8,9 @@ const PersonSchema = mongoose.Schema(
     pob: { type: String, required: true },
     gender: { type: String, enum: ['male', 'female'], required: true },
     motherName: { type: String, required: true },
+    motherVisa: { type: String },
     fatherName: { type: String, required: true },
+    fatherVisa: { type: String },
     passportNumber: {
       type: String,
       required: true,
@@ -26,11 +28,9 @@ const PersonSchema = mongoose.Schema(
     address: { type: String },
     familyMember: { type: String, enum: ['father', 'mother', 'son', 'daughter', 'other'] },
     familyOther: { type: String },
+    familyStatement: { type: String },
     photo: { type: String, required: true },
-    bankStatement: { type: String },
-    ownershipCertificate: { type: String },
-    refNum: { type: String }
-
+    refNum: { type: String, required: true }
   },
   {
     timestamps: true
