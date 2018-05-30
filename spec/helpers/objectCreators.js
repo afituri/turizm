@@ -18,7 +18,7 @@ module.exports = {
   order: {
     applicationType: 'person',
     country: 'libya',
-    travelDoc: 'ordinary',
+    travelDocument: 'ordinary',
     arrivalDate: new Date(),
     bankStatement: '/someBankStatement',
     workCertificate: '/someWorkCertificate',

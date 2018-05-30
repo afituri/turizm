@@ -50,7 +50,7 @@ describe('Order', () => {
         expect(body.orders[0]._id).toBe(order._id.toString());
         expect(body.orders[0].applicationType).toBe('person');
         expect(body.orders[0].country).toBe('libya');
-        expect(body.orders[0].travelDoc).toBe('ordinary');
+        expect(body.orders[0].travelDocument).toBe('ordinary');
         expect(body.orders[0].bankStatement).toBe('/someBankStatement');
         expect(body.orders[0].workCertificate).toBe('/someWorkCertificate');
         expect(body.orders[0].hotelReservations).toBe('/someHotelReservations');
@@ -82,7 +82,7 @@ describe('Order', () => {
         form: {
           applicationType: 'person',
           country: 'libya',
-          travelDoc: 'ordinary',
+          travelDocument: 'ordinary',
           arrivalDate: new Date(),
           bankStatement: '/someBankStatement',
           workCertificate: '/someWorkCertificate',
@@ -115,7 +115,7 @@ describe('Order', () => {
         expect(res.statusCode).toBe(201);
         expect(body.order.applicationType).toBe('person');
         expect(body.order.country).toBe('libya');
-        expect(body.order.travelDoc).toBe('ordinary');
+        expect(body.order.travelDocument).toBe('ordinary');
         expect(body.order.bankStatement).toBe('/someBankStatement');
         expect(body.order.workCertificate).toBe('/someWorkCertificate');
         expect(body.order.hotelReservations).toBe('/someHotelReservations');
@@ -149,7 +149,7 @@ describe('Order', () => {
         form: {
           applicationType: 'family',
           country: 'algeria',
-          travelDoc: 'ordinary',
+          travelDocument: 'ordinary',
           familyStatement: '/somefamilydoc',
           arrivalDate: new Date(),
           locale: 'ar',
@@ -163,6 +163,7 @@ describe('Order', () => {
               motherName: 'Sara',
               fatherName: 'Omran',
               familyMember: 'father',
+              familyStatement: '/somefamilystatement1',
               passportNumber: 'L34UFKES',
               passportIssueDate: moment({ years: 2013, months: 3, days: 5 }).toJSON(),
               passportExpiryDate: moment({ years: 2017, months: 3, days: 5 }).toJSON(),
@@ -181,6 +182,7 @@ describe('Order', () => {
               motherName: 'Salma',
               fatherName: 'Mokhtar',
               familyMember: 'mother',
+              familyStatement: '/somefamilystatement2',
               passportNumber: 'L34UFKEX',
               passportIssueDate: moment({ years: 2013, months: 3, days: 5 }).toJSON(),
               passportExpiryDate: moment({ years: 2017, months: 3, days: 5 }).toJSON(),
@@ -198,7 +200,7 @@ describe('Order', () => {
         expect(res.statusCode).toBe(201);
         expect(body.order.applicationType).toBe('family');
         expect(body.order.country).toBe('algeria');
-        expect(body.order.travelDoc).toBe('ordinary');
+        expect(body.order.travelDocument).toBe('ordinary');
         expect(body.order.locale).toBe('ar');
         expect(body.order.people[0].givenNames).toBe('Ahmed Ali');
         expect(body.order.people[0].sureName).toBe('Salem');
@@ -208,6 +210,7 @@ describe('Order', () => {
         expect(body.order.people[0].motherName).toBe('Sara');
         expect(body.order.people[0].fatherName).toBe('Omran');
         expect(body.order.people[0].familyMember).toBe('father');
+        expect(body.order.people[0].familyStatement).toBe('/somefamilystatement1');
         expect(body.order.people[0].passportNumber).toBe('L34UFKES');
         expect(moment(body.order.people[0].passportIssueDate).year()).toBe(2013);
         expect(moment(body.order.people[0].passportExpiryDate).year()).toBe(2017);
@@ -224,6 +227,7 @@ describe('Order', () => {
         expect(body.order.people[1].motherName).toBe('Salma');
         expect(body.order.people[1].fatherName).toBe('Mokhtar');
         expect(body.order.people[1].familyMember).toBe('mother');
+        expect(body.order.people[1].familyStatement).toBe('/somefamilystatement2');
         expect(body.order.people[1].passportNumber).toBe('L34UFKEX');
         expect(moment(body.order.people[1].passportIssueDate).year()).toBe(2013);
         expect(moment(body.order.people[1].passportExpiryDate).year()).toBe(2017);
@@ -244,7 +248,7 @@ describe('Order', () => {
         form: {
           applicationType: 'person',
           country: 'libya',
-          travelDoc: 'ordinary',
+          travelDocument: 'ordinary',
           arrivalDate: new Date(),
           locale: 'en',
           people: [
@@ -283,7 +287,7 @@ describe('Order', () => {
         form: {
           applicationType: 'person',
           country: 'algeria',
-          travelDoc: 'ordinary',
+          travelDocument: 'ordinary',
           arrivalDate: new Date(),
           locale: 'en',
           people: [
@@ -316,22 +320,22 @@ describe('Order', () => {
     );
   });
 
-  it('activates an order', done => {
-    request.put(
-      {
-        url: `${apiUrl}/orders/${order._id}/activate`,
-        form: {
-          refNum: 'slsdkfj'
-        }
-      },
-      (err, res, body) => {
-        body = JSON.parse(body);
-        expect(res.statusCode).toBe(200);
-        expect(body.order.status).toBe('active');
-        done();
-      }
-    );
-  });
+  // it('activates an order', done => {
+  //   request.put(
+  //     {
+  //       url: `${apiUrl}/orders/${order._id}/activate`,
+  //       form: {
+  //         refNum: 'slsdkfj'
+  //       }
+  //     },
+  //     (err, res, body) => {
+  //       body = JSON.parse(body);
+  //       expect(res.statusCode).toBe(200);
+  //       expect(body.order.status).toBe('active');
+  //       done();
+  //     }
+  //   );
+  // });
 });
 
 // ----------------------------------------

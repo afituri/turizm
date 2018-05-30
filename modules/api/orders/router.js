@@ -9,7 +9,7 @@ module.exports = () => {
     .get(controller.ordersIndex)
     .post(controller.ordersCreate);
 
-  router.route('/:id/activate').put(controller.ordersActivate);
+  router.route('/:id/activate').get(controller.ordersActivate);
 
   router.route('/:id').get(controller.ordersShow);
 

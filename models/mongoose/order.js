@@ -6,7 +6,7 @@ const OrderSchema = mongoose.Schema(
   {
     applicationType: { type: String, enum: ['family', 'person'], required: true },
     country: { type: String, enum: ['libya', 'algeria', 'iraq'], required: true },
-    travelDoc: {
+    travelDocument: {
       type: String,
       enum: [
         'ordinary',

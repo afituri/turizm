@@ -38,7 +38,7 @@ class OrdersAPIController {
     const {
       applicationType,
       country,
-      travelDoc,
+      travelDocument,
       arrivalDate,
       people,
       familyStatement,
@@ -49,7 +49,7 @@ class OrdersAPIController {
       locale
     } = req.body;
 
-    if (!applicationType || !country || !travelDoc || !arrivalDate) {
+    if (!applicationType || !country || !travelDocument || !arrivalDate) {
       return res
         .status(400)
         .json({ error: 'Some information are missing', code: 'missingInformation' });
@@ -93,7 +93,7 @@ class OrdersAPIController {
       .createOrder({
         applicationType,
         country,
-        travelDoc,
+        travelDocument,
         people: peopleLst,
         familyStatement,
         bankStatement,
