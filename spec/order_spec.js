@@ -152,6 +152,10 @@ describe('Order', () => {
           travelDocument: 'ordinary',
           familyStatement: '/somefamilydoc',
           arrivalDate: new Date(),
+          bankStatement: '/someBankStatement',
+          workCertificate: '/someWorkCertificate',
+          hotelReservations: '/someHotelReservations',
+          ownershipCertificate: '/someOwnershipCertificate',
           locale: 'ar',
           people: [
             {
@@ -202,6 +206,10 @@ describe('Order', () => {
         expect(body.order.country).toBe('algeria');
         expect(body.order.travelDocument).toBe('ordinary');
         expect(body.order.locale).toBe('ar');
+        expect(body.order.bankStatement).toBe('/someBankStatement');
+        expect(body.order.workCertificate).toBe('/someWorkCertificate');
+        expect(body.order.hotelReservations).toBe('/someHotelReservations');
+        expect(body.order.ownershipCertificate).toBe('/someOwnershipCertificate');
         expect(body.order.people[0].givenNames).toBe('Ahmed Ali');
         expect(body.order.people[0].sureName).toBe('Salem');
         expect(moment(body.order.people[0].dob).year()).toBe(1985);

@@ -61,12 +61,6 @@ class OrdersAPIController {
         .json({ error: 'You must provide at least one person', code: 'missingPerson' });
     }
 
-    if (applicationType === 'family' && !familyStatement) {
-      return res
-        .status(400)
-        .json({ error: 'You must provide a family statement', code: 'missingFamilyStatement' });
-    }
-
     const validatePeople = service.validatePeople(people);
 
     if (validatePeople.error) {
