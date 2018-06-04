@@ -1,6 +1,7 @@
 const Service = require('./service');
 const shortid = require('shortid');
 const mongoose = require('mongoose');
+const { evisa } = require('../../../config');
 
 const EmailService = require('../../../services/emailVerification');
 
@@ -98,7 +99,7 @@ class OrdersAPIController {
         refNum: shortid.generate()
       })
       .then(order => {
-        EmailService.sendOrderActivationCode(order, 'orderCreation');
+        EmailService.sendOrderActivationCode(order);
         order = order.toObject();
         delete order.refNum;
         return res.status(201).send({ order });
@@ -112,26 +113,26 @@ class OrdersAPIController {
   async ordersActivate(req, res) {
     const service = new Service(req);
     const { id } = req.params;
-    const { refNum } = req.body;
+    const refNum = req.query['ref-num'];
     let order;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid ID', code: 'invalidId' });
+      return res.redirect(`${evisa.feUrl}/errors/invalidId`);
     }
 
     if (!refNum) {
-      return res.status(400).json({ error: 'Missing reference number', code: 'missingRefNum' });
+      return res.redirect(`${evisa.feUrl}/errors/wrongRefNum`);
     }
 
     try {
       order = await service.fetchOrderById(id);
       if (order.refNum !== refNum) {
-        return res.status(400).json({ error: 'Wrong reference number', code: 'wrongRefNum' });
+        return res.redirect(`${evisa.feUrl}/errors/wrongRefNum`);
       }
       order = await service.findByIdAndUpdate(id, { status: 'active' });
-      return res.status(200).json({ order });
+      return res.redirect(`${evisa.feUrl}/orders/${id}`);
     } catch (e) {
-      return res.status(400).json({ error: e, code: 'unknownError' });
+      return res.redirect(`${evisa.feUrl}/errors/unknownError`);
     }
   }
 

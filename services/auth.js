@@ -18,17 +18,19 @@ class JWTAuth {
   }
 
   attachTo(app) {
-    passport.use(new JwtStrategy(
-      {
-        jwtFromRequest: ExtractJwt.fromAuthHeader(),
-        secretOrKey: jwtSecret
-      },
-      function (jwtPayload, done) {
-        User.findById(jwtPayload._id).then(user => {
-          return done(null, user);
-        });
-      }
-    ));
+    passport.use(
+      new JwtStrategy(
+        {
+          jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('jwt'),
+          secretOrKey: jwtSecret
+        },
+        function(jwtPayload, done) {
+          User.findById(jwtPayload._id).then(user => {
+            return done(null, user);
+          });
+        }
+      )
+    );
 
     app.use(passport.initialize());
     app.use(passport.authenticate('jwt', { session: false }));

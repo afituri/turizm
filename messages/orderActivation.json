@@ -1,6 +1,6 @@
 {
   "subject-ar": "قم بتفعيل طلبك عبر إي فيزا توريزم",
   "subject-en": "Activate your E-Visa Turizm application!",
-  "html-ar": "<div dir=\"rtl\"><p><strong>إلى السيد: {name},</strong></p><p>  رقم المرجع الخاص بطلبك ظاهر بالأسفل :  </p><p>الرقم المرجعي :  <strong> {refNum} </strong></p><br><p>الرجاء القيام بإدخال رقم المرجع لمواصلة طلبك عبر موقعنا الإلكتروني. </p><p>الرقم المرجعي ضروري لمواصلة طلبك. </p><p>شكراً لطلبك. </p><p>بكل اخلاص, </p><p>شركة إي فيزا توريزم</p></div>",
-  "html-en": "<div><p><strong>Dear {name},</strong></p><p>Your reference code for the confirmation of your application over our evisa website is shown below :  </p><p>REFERENCE CODE :  <strong> {refNum}</strong></p><br><p>Please proceed with your application by entering your confirmation reference code on our website. </p><p>Reference code is required in order to continue your application. </p><p>Thank you for your application. </p><p>Sincerely, </p><p>Evisa Turizm</p></div>"
+  "templateId-en": "caba70ce-20d6-45b2-a2ac-721e49910de7",
+  "templateId-ar": "caba70ce-20d6-45b2-a2ac-721e49910de71"
 }

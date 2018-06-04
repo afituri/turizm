@@ -1,21 +1,11 @@
-const nodemailer = require('nodemailer');
-const sendGridTransport = require('nodemailer-sendgrid-transport');
 const { sendgrid } = require('../config');
-
-const _options = {
-  service: 'SendGrid',
-  auth: {
-    api_user: sendgrid.username,
-    api_key: sendgrid.password
-  }
-};
-
-const _transporter = nodemailer.createTransport(sendGridTransport(_options));
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(sendgrid.apiKey);
 
 class EmailService {
   send(options) {
     return new Promise((resolve, reject) => {
-      _transporter.sendMail(options, (err, info) => {
+      sgMail.send(options, (err, info) => {
         if (err) {
           reject(err);
         }

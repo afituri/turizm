@@ -1,53 +1,52 @@
 const EmailService = require('./email');
 const { evisa } = require('../config');
 const messages = require('../messages');
-const format = require('string-template');
 
-const createEmailOptions = (userData, type) => {
-  const {
-    email, name, refNum, locale
-  } = userData;
-  let html;
-  switch (type) {
-    case 'orderCreation':
-      html = format(messages.orderActivation[`html-${locale}`], {
-        name,
-        refNum
-      });
-      return {
-        from: `Evisa Turizm <${evisa.email}>`,
-        to: email,
-        subject: messages.orderActivation[`subject-${locale}`],
-        html
-      };
-    case 'passwordReset':
-      html = format(messages.passwordReset[`html-${userData.locale}`], {
-        url: evisa.apiUrl,
-        hash: userData.verificationHash
-      });
-      return {
-        from: `Evisa Turizm <${evisa.email}>`,
-        to: userData.email,
-        subject: messages.passwordReset[`subject-${userData.locale}`],
-        html
-      };
-    default:
-      return {};
-  }
+const _newSendGridEmail = (
+  fromEmail,
+  fromName,
+  toEmail,
+  subject,
+  templateId,
+  url,
+  name,
+  refNum
+) => {
+  return {
+    to: toEmail,
+    from: {
+      email: fromEmail,
+      name: fromName
+    },
+    subject,
+    templateId,
+    substitutionWrappers: ['{{', '}}'],
+    substitutions: {
+      name: name,
+      refNum: refNum,
+      subject: subject,
+      url: url
+    }
+  };
 };
 
 class EmailVerificationService {
-  sendOrderActivationCode(order, emailType) {
-    let { email, givenNames, sureName } = order.people[0];
-    let { locale, refNum } = order;
-    let emailOptions = createEmailOptions(
-      {
-        locale,
-        email,
-        name: `${givenNames} ${sureName}`,
-        refNum
-      },
-      emailType
+  sendOrderActivationCode(order) {
+    const { email, givenNames, sureName } = order.people[0];
+    const { locale, refNum } = order;
+    const name = `${givenNames} ${sureName}`;
+    const subject = messages.orderActivation[`subject-${locale}`];
+    const templateId = messages.orderActivation[`templateId-${locale}`];
+    const url = `${evisa.apiUrl}/api/v1/orders/${order._id}/activate?ref-num=${refNum}`;
+    const emailOptions = _newSendGridEmail(
+      evisa.email,
+      'Evisa Turizm',
+      email,
+      subject,
+      templateId,
+      url,
+      name,
+      refNum
     );
     return EmailService.send(emailOptions);
   }

@@ -25,6 +25,7 @@ const evisa = {
 };
 
 const sendgrid = {
+  apiKey: process.env.SENDGRID_API_KEY,
   username: process.env.SENDGRID_USERNAME,
   password: process.env.SENDGRID_PASSWORD
 };
