@@ -1,7 +1,7 @@
 /* eslint-disable */
 // Disable all application logging while running tests
 
-//console.log = function() {};
+console.log = function() {};
 
 const app = require('../server');
 const request = require('request');
@@ -18,7 +18,6 @@ describe('Order', () => {
   let req;
   let order;
   let body;
-  let token;
 
   beforeAll(done => {
     server = app.listen(8888, () => {
@@ -328,22 +327,127 @@ describe('Order', () => {
     );
   });
 
-  // it('activates an order', done => {
-  //   request.put(
-  //     {
-  //       url: `${apiUrl}/orders/${order._id}/activate`,
-  //       form: {
-  //         refNum: 'slsdkfj'
-  //       }
-  //     },
-  //     (err, res, body) => {
-  //       body = JSON.parse(body);
-  //       expect(res.statusCode).toBe(200);
-  //       expect(body.order.status).toBe('active');
-  //       done();
-  //     }
-  //   );
-  // });
+  it('activates an order', done => {
+    request.get(
+      {
+        url: `${apiUrl}/orders/${order._id}/activate`,
+        qs: {
+          'ref-num': order.refNum
+        }
+      },
+      (err, res, body) => {
+        request.get(
+          {
+            url: `${apiUrl}/orders/${order._id}`
+          },
+          (err, res, body) => {
+            body = JSON.parse(body);
+            expect(res.statusCode).toBe(200);
+            expect(body.order.status).toBe('active');
+            done();
+          }
+        );
+      }
+    );
+  });
+
+  it('fails to activate usung wrong ref-num', done => {
+    request.get(
+      {
+        url: `${apiUrl}/orders/${order._id}/activate`,
+        qs: {
+          'ref-num': 'wrongrefnum'
+        }
+      },
+      (err, res, body) => {
+        request.get(
+          {
+            url: `${apiUrl}/orders/${order._id}`
+          },
+          (err, res, body) => {
+            body = JSON.parse(body);
+            expect(res.statusCode).toBe(400);
+            expect(body.code).toBe('notActive');
+            done();
+          }
+        );
+      }
+    );
+  });
+
+  it('shows a specific order', done => {
+    Order.findByIdAndUpdate(order._id, { status: 'active' }, { new: true }).then(order1 => {
+      request.get(
+        {
+          url: `${apiUrl}/orders/${order._id}`
+        },
+        (err, res, body) => {
+          body = JSON.parse(body);
+          expect(res.statusCode).toBe(200);
+          expect(body.order._id).toBe(order1._id.toString());
+          expect(body.order.applicationType).toBe('person');
+          expect(body.order.country).toBe('libya');
+          expect(body.order.travelDocument).toBe('ordinary');
+          expect(body.order.bankStatement).toBe('/someBankStatement');
+          expect(body.order.workCertificate).toBe('/someWorkCertificate');
+          expect(body.order.hotelReservations).toBe('/someHotelReservations');
+          expect(body.order.ownershipCertificate).toBe('/someOwnershipCertificate');
+          expect(body.order.people[0].givenNames).toBe('Salem Ahmed');
+          expect(body.order.people[0].sureName).toBe('Mohammed');
+          expect(moment(body.order.people[0].dob).year()).toBe(1986);
+          expect(body.order.people[0].pob).toBe('Buckarest');
+          expect(body.order.people[0].gender).toBe('male');
+          expect(body.order.people[0].motherName).toBe('Farah');
+          expect(body.order.people[0].passportNumber).toBe('L34UFKEU');
+          expect(body.order.people[0].fatherName).toBe('Mokhtar');
+          expect(moment(body.order.people[0].passportIssueDate).year()).toBe(2014);
+          expect(moment(body.order.people[0].passportExpiryDate).year()).toBe(2018);
+          expect(body.order.people[0].passportPhoto).toBe('/somephoto');
+          expect(body.order.people[0].email).toBe('myemail@email.com');
+          expect(body.order.people[0].phoneNumber).toBe('00903883838833');
+          expect(body.order.people[0].address).toBe('Some Address');
+          expect(body.order.people[0].photo).toBe('/somephoto');
+          done();
+        }
+      );
+    });
+  });
+
+  it('resend activation link', done => {
+    request.get(
+      {
+        url: `${apiUrl}/orders/${order._id}/resend`
+      },
+      (err, res, body) => {
+        body = JSON.parse(body);
+        expect(res.statusCode).toBe(200);
+        expect(body.order._id).toBe(order._id.toString());
+        expect(body.order.applicationType).toBe('person');
+        expect(body.order.country).toBe('libya');
+        expect(body.order.travelDocument).toBe('ordinary');
+        expect(body.order.bankStatement).toBe('/someBankStatement');
+        expect(body.order.workCertificate).toBe('/someWorkCertificate');
+        expect(body.order.hotelReservations).toBe('/someHotelReservations');
+        expect(body.order.ownershipCertificate).toBe('/someOwnershipCertificate');
+        expect(body.order.people[0].givenNames).toBe('Salem Ahmed');
+        expect(body.order.people[0].sureName).toBe('Mohammed');
+        expect(moment(body.order.people[0].dob).year()).toBe(1986);
+        expect(body.order.people[0].pob).toBe('Buckarest');
+        expect(body.order.people[0].gender).toBe('male');
+        expect(body.order.people[0].motherName).toBe('Farah');
+        expect(body.order.people[0].passportNumber).toBe('L34UFKEU');
+        expect(body.order.people[0].fatherName).toBe('Mokhtar');
+        expect(moment(body.order.people[0].passportIssueDate).year()).toBe(2014);
+        expect(moment(body.order.people[0].passportExpiryDate).year()).toBe(2018);
+        expect(body.order.people[0].passportPhoto).toBe('/somephoto');
+        expect(body.order.people[0].email).toBe('myemail@email.com');
+        expect(body.order.people[0].phoneNumber).toBe('00903883838833');
+        expect(body.order.people[0].address).toBe('Some Address');
+        expect(body.order.people[0].photo).toBe('/somephoto');
+        done();
+      }
+    );
+    });
 });
 
 // ----------------------------------------

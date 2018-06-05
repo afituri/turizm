@@ -11,6 +11,8 @@ module.exports = () => {
 
   router.route('/:id/activate').get(controller.ordersActivate);
 
+  router.route('/:id/resend').get(controller.resendActivation);
+
   router.route('/:id').get(controller.ordersShow);
 
   return router;

@@ -19,19 +19,22 @@ class OrdersAPIController {
       });
   }
 
-  ordersShow(req, res) {
+  async ordersShow(req, res) {
     const service = new Service(req);
     const { id } = req.params;
 
-    service
-      .fetchOrderById(id)
-      .then(order => {
-        return res.json({ order });
-      })
-      .catch(e => {
-        console.log(`\nError at GET /orders/${id}`, e);
-        return res.status(400).json({ error: e, code: 'unknownError' });
-      });
+    try {
+      let order = await service.fetchOrderById(id);
+      if (order.status === 'open') {
+        res
+          .status(400)
+          .json({ error: 'This application has not been activated yet.', code: 'notActive' });
+      }
+      return res.json({ order });
+    } catch (err) {
+      console.log(`\nError at GET /orders/${id}`, err);
+      return res.status(400).json({ error: err, code: 'unknownError' });
+    }
   }
 
   ordersCreate(req, res) {
@@ -113,26 +116,54 @@ class OrdersAPIController {
   async ordersActivate(req, res) {
     const service = new Service(req);
     const { id } = req.params;
+    const { feUrl } = evisa;
     const refNum = req.query['ref-num'];
     let order;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.redirect(`${evisa.feUrl}/errors/invalidId`);
+      return res.redirect(`${feUrl}/errors/invalidId`);
     }
 
     if (!refNum) {
-      return res.redirect(`${evisa.feUrl}/errors/wrongRefNum`);
+      return res.redirect(`${feUrl}/errors/wrongRefNum`);
     }
 
     try {
       order = await service.fetchOrderById(id);
       if (order.refNum !== refNum) {
-        return res.redirect(`${evisa.feUrl}/errors/wrongRefNum`);
+        return res.redirect(`${feUrl}/errors/wrongRefNum`);
       }
       order = await service.findByIdAndUpdate(id, { status: 'active' });
-      return res.redirect(`${evisa.feUrl}/orders/${id}`);
+      return res.redirect(`${feUrl}/orders/${id}`);
     } catch (e) {
-      return res.redirect(`${evisa.feUrl}/errors/unknownError`);
+      return res.redirect(`${feUrl}/errors/unknownError`);
+    }
+  }
+
+  async resendActivation(req, res) {
+    const service = new Service(req);
+    const { id } = req.params;
+    let order;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid id', code: 'invalidId' });
+    }
+
+    try {
+      order = await service.fetchOrderById(id);
+      if (order.paid) {
+        res.status(400).json({
+          error: 'This application has been already activated and paid',
+          code: 'alreadyPaid'
+        });
+      }
+      EmailService.sendOrderActivationCode(order);
+      order = order.toObject();
+      delete order.refNum;
+      return res.status(200).send({ order });
+    } catch (e) {
+      console.log(`\nError at POST /orders/${id}/resend`, e);
+      return res.status(400).json({ error: e, code: 'unknownError' });
     }
   }
 
