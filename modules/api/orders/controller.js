@@ -1,6 +1,7 @@
 const Service = require('./service');
 const shortid = require('shortid');
 const mongoose = require('mongoose');
+const moment = require('moment');
 const { evisa } = require('../../../config');
 
 const EmailService = require('../../../services/emailVerification');
@@ -132,6 +133,15 @@ class OrdersAPIController {
       if (order.refNum !== refNum) {
         return res.redirect(`${feUrl}/errors/wrongRefNum`);
       }
+      const now = moment(new Date());
+      const end = moment(order.createdAt);
+      const duration = moment.duration(now.diff(end));
+      const hours = duration.asHours();
+
+      if (hours > 24) {
+        return res.redirect(`${feUrl}/errors/expired`);
+      }
+
       order = await service.findByIdAndUpdate(id, { status: 'active' });
       return res.redirect(`${feUrl}/orders/${id}`);
     } catch (e) {
