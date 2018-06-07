@@ -37,7 +37,7 @@ class OrdersAPIController {
     }
   }
 
-  ordersCreate(req, res) {
+  async ordersCreate(req, res) {
     const service = new Service(req);
     const {
       applicationType,
@@ -87,8 +87,8 @@ class OrdersAPIController {
       });
     });
 
-    return service
-      .createOrder({
+    try {
+      let order = await service.createOrder({
         applicationType,
         country,
         travelDocument,
@@ -100,17 +100,16 @@ class OrdersAPIController {
         ownershipCertificate,
         locale,
         refNum: shortid.generate()
-      })
-      .then(order => {
-        EmailService.sendOrderActivationCode(order);
-        order = order.toObject();
-        delete order.refNum;
-        return res.status(201).send({ order });
-      })
-      .catch(e => {
-        console.log('\nError at POST /orders', e);
-        return res.status(400).json({ error: e, code: 'unknownError' });
       });
+      await EmailService.sendOrderActivationCode(order);
+      order = order.toObject();
+      delete order.refNum;
+      return res.status(201).send({ order });
+    } catch (e) {
+      console.log('\nError at POST /orders', e);
+
+      return res.status(400).json({ error: e, code: 'unknownError' });
+    }
   }
 
   async ordersActivate(req, res) {
@@ -157,7 +156,7 @@ class OrdersAPIController {
           code: 'alreadyPaid'
         });
       }
-      EmailService.sendOrderActivationCode(order);
+      await EmailService.sendOrderActivationCode(order);
       order = order.toObject();
       delete order.refNum;
       return res.status(200).send({ order });
