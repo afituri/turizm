@@ -3,7 +3,6 @@ const shortid = require('shortid');
 const mongoose = require('mongoose');
 const moment = require('moment');
 const { evisa } = require('../../../config');
-
 const EmailService = require('../../../services/emailVerification');
 
 class OrdersAPIController {
