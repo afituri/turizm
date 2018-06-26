@@ -21,7 +21,7 @@ class OrdersService {
     }
 
     if (sorted) {
-      sort = { [sorted[0].id]: sorted[0].desc === false ? 'asc' : 'desc' };
+      sort = { [sorted[0].id]: sorted[0].desc ? -1 : 1 };
     }
 
     const options = {
@@ -29,6 +29,8 @@ class OrdersService {
       limit: parseInt(pageSize, 10),
       sort
     };
+
+    console.log(options, query);
 
     return Order.paginate(query, options);
   }

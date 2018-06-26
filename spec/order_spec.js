@@ -1,7 +1,7 @@
 /* eslint-disable */
 // Disable all application logging while running tests
 
-console.log = function() {};
+//console.log = function() {};
 
 const app = require('../server');
 const request = require('request');
