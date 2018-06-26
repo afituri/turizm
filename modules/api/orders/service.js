@@ -20,7 +20,7 @@ class OrdersService {
     }
 
     if (sorted) {
-      sort[sorted[0].id] = sorted[0].desc === true ? -1 : 1;
+      sort[sorted[0].id] = sorted[0].desc === 'true' ? -1 : 1;
     }
 
     const options = {
