@@ -7,12 +7,11 @@ class OrdersService {
 
   fetchOrders(q) {
     const { Order } = this.req.models;
-    const {
+    let {
       page, pageSize, sorted, filtered
     } = q;
     let query = {};
     let sort = {};
-
     if (filtered) {
       query = filtered.reduce((obj, item) => {
         obj[item.id] = item.value;
@@ -21,7 +20,7 @@ class OrdersService {
     }
 
     if (sorted) {
-      sort = { [sorted[0].id]: sorted[0].desc ? -1 : 1 };
+      sort[sorted[0].id] = sorted[0].desc === true ? -1 : 1;
     }
 
     const options = {
@@ -29,8 +28,6 @@ class OrdersService {
       limit: parseInt(pageSize, 10),
       sort
     };
-
-    console.log(options, query);
 
     return Order.paginate(query, options);
   }
