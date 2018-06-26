@@ -41,34 +41,51 @@ describe('Order', () => {
   it('gets all orders', done => {
     request.get(
       {
-        url: `${apiUrl}/orders`
+        url: `${apiUrl}/orders`,
+        qs: {
+          page: 0,
+          pageSize: 10,
+          sorted: [],
+          filtered: [
+            [
+              {
+                id: 'status',
+                value: 'open'
+              },
+              {
+                id: 'country',
+                value: 'libya'
+              }
+            ]
+          ]
+        }
       },
       (err, res, body) => {
         body = JSON.parse(body);
         expect(res.statusCode).toBe(200);
-        expect(body.orders[0]._id).toBe(order._id.toString());
-        expect(body.orders[0].applicationType).toBe('person');
-        expect(body.orders[0].country).toBe('libya');
-        expect(body.orders[0].travelDocument).toBe('ordinary');
-        expect(body.orders[0].bankStatement).toBe('/someBankStatement');
-        expect(body.orders[0].workCertificate).toBe('/someWorkCertificate');
-        expect(body.orders[0].hotelReservations).toBe('/someHotelReservations');
-        expect(body.orders[0].ownershipCertificate).toBe('/someOwnershipCertificate');
-        expect(body.orders[0].people[0].givenNames).toBe('Salem Ahmed');
-        expect(body.orders[0].people[0].sureName).toBe('Mohammed');
-        expect(moment(body.orders[0].people[0].dob).year()).toBe(1986);
-        expect(body.orders[0].people[0].pob).toBe('Buckarest');
-        expect(body.orders[0].people[0].gender).toBe('male');
-        expect(body.orders[0].people[0].motherName).toBe('Farah');
-        expect(body.orders[0].people[0].passportNumber).toBe('L34UFKEU');
-        expect(body.orders[0].people[0].fatherName).toBe('Mokhtar');
-        expect(moment(body.orders[0].people[0].passportIssueDate).year()).toBe(2014);
-        expect(moment(body.orders[0].people[0].passportExpiryDate).year()).toBe(2018);
-        expect(body.orders[0].people[0].passportPhoto).toBe('/somephoto');
-        expect(body.orders[0].people[0].email).toBe('myemail@email.com');
-        expect(body.orders[0].people[0].phoneNumber).toBe('00903883838833');
-        expect(body.orders[0].people[0].address).toBe('Some Address');
-        expect(body.orders[0].people[0].photo).toBe('/somephoto');
+        expect(body.orders.docs[0]._id).toBe(order._id.toString());
+        expect(body.orders.docs[0].applicationType).toBe('person');
+        expect(body.orders.docs[0].country).toBe('libya');
+        expect(body.orders.docs[0].travelDocument).toBe('ordinary');
+        expect(body.orders.docs[0].bankStatement).toBe('/someBankStatement');
+        expect(body.orders.docs[0].workCertificate).toBe('/someWorkCertificate');
+        expect(body.orders.docs[0].hotelReservations).toBe('/someHotelReservations');
+        expect(body.orders.docs[0].ownershipCertificate).toBe('/someOwnershipCertificate');
+        expect(body.orders.docs[0].people[0].givenNames).toBe('Salem Ahmed');
+        expect(body.orders.docs[0].people[0].sureName).toBe('Mohammed');
+        expect(moment(body.orders.docs[0].people[0].dob).year()).toBe(1986);
+        expect(body.orders.docs[0].people[0].pob).toBe('Buckarest');
+        expect(body.orders.docs[0].people[0].gender).toBe('male');
+        expect(body.orders.docs[0].people[0].motherName).toBe('Farah');
+        expect(body.orders.docs[0].people[0].passportNumber).toBe('L34UFKEU');
+        expect(body.orders.docs[0].people[0].fatherName).toBe('Mokhtar');
+        expect(moment(body.orders.docs[0].people[0].passportIssueDate).year()).toBe(2014);
+        expect(moment(body.orders.docs[0].people[0].passportExpiryDate).year()).toBe(2018);
+        expect(body.orders.docs[0].people[0].passportPhoto).toBe('/somephoto');
+        expect(body.orders.docs[0].people[0].email).toBe('myemail@email.com');
+        expect(body.orders.docs[0].people[0].phoneNumber).toBe('00903883838833');
+        expect(body.orders.docs[0].people[0].address).toBe('Some Address');
+        expect(body.orders.docs[0].people[0].photo).toBe('/somephoto');
         done();
       }
     );

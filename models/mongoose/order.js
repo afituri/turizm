@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+var mongoosePaginate = require('mongoose-paginate');
 const uniqueValidator = require('mongoose-unique-validator');
 const Person = require('./person').PersonSchema;
 
@@ -43,6 +44,7 @@ const OrderSchema = mongoose.Schema(
 );
 
 OrderSchema.plugin(uniqueValidator);
+OrderSchema.plugin(mongoosePaginate);
 
 const Order = mongoose.model('Order', OrderSchema);
 

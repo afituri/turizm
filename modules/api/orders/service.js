@@ -5,9 +5,32 @@ class OrdersService {
     this.req = req;
   }
 
-  fetchOrders() {
+  fetchOrders(q) {
     const { Order } = this.req.models;
-    return Order.find();
+    const {
+      page, pageSize, sorted, filtered
+    } = q;
+    let query = {};
+    let sort = {};
+
+    if (filtered) {
+      query = filtered[0].reduce((obj, item) => {
+        obj[item.id] = item.value;
+        return obj;
+      }, {});
+    }
+
+    if (sorted) {
+      sort = { [sorted[0].id]: sorted[0].desc === 'false' ? 'asc' : 'desc' };
+    }
+
+    const options = {
+      page: parseInt(page, 10) + 1,
+      limit: parseInt(pageSize, 10),
+      sort
+    };
+
+    return Order.paginate(query, options);
   }
 
   fetchOrderById(id) {

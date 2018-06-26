@@ -1,6 +1,4 @@
 const Service = require('./service');
-const mongoose = require('mongoose');
-const { evisa } = require('../../../config');
 const EmailService = require('../../../services/emailVerification');
 
 class FeedBackAPIController {
@@ -30,7 +28,7 @@ class FeedBackAPIController {
     }
 
     try {
-      let order = await service.createOrder({
+      let feedBackObj = await service.createFeedBack({
         feedBackType,
         country,
         givenNames,
@@ -40,8 +38,7 @@ class FeedBackAPIController {
         feedBack
       });
       await EmailService.sendOrderActivationCode(order);
-      order = order.toObject();
-      delete order.refNum;
+
       return res.status(201).send({ order });
     } catch (e) {
       console.log('\nError at POST /orders', e);

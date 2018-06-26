@@ -9,7 +9,7 @@ class OrdersAPIController {
   ordersIndex(req, res) {
     const service = new Service(req);
     return service
-      .fetchOrders()
+      .fetchOrders(req.query)
       .then(orders => {
         return res.json({ orders: orders });
       })
