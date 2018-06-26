@@ -14,14 +14,14 @@ class OrdersService {
     let sort = {};
 
     if (filtered) {
-      query = filtered[0].reduce((obj, item) => {
+      query = filtered.reduce((obj, item) => {
         obj[item.id] = item.value;
         return obj;
       }, {});
     }
 
     if (sorted) {
-      sort = { [sorted[0].id]: sorted[0].desc === 'false' ? 'asc' : 'desc' };
+      sort = { [sorted[0].id]: sorted[0].desc === false ? 'asc' : 'desc' };
     }
 
     const options = {

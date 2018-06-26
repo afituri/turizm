@@ -45,18 +45,21 @@ describe('Order', () => {
         qs: {
           page: 0,
           pageSize: 10,
-          sorted: [],
+          sorted: [
+            {
+              id: 'country',
+              desc: false
+            }
+          ],
           filtered: [
-            [
-              {
-                id: 'status',
-                value: 'open'
-              },
-              {
-                id: 'country',
-                value: 'libya'
-              }
-            ]
+            {
+              id: 'status',
+              value: 'open'
+            },
+            {
+              id: 'country',
+              value: 'libya'
+            }
           ]
         }
       },
