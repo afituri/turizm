@@ -14,7 +14,7 @@ class OrdersService {
     let sort = {};
     if (filtered) {
       query = filtered.reduce((obj, item) => {
-        obj[item.id] = item.value;
+        obj[item.id] = new RegExp(item.value, 'i');
         return obj;
       }, {});
     }

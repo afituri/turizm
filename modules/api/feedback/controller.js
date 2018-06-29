@@ -1,51 +1,51 @@
 const Service = require('./service');
 const EmailService = require('../../../services/emailVerification');
 
-class FeedBackAPIController {
-  ordersIndex(req, res) {
+class FeedbackAPIController {
+  feedbacksIndex(req, res) {
     const service = new Service(req);
     return service
-      .fetchFeedBack()
-      .then(feedBack => {
-        return res.json({ feedBack: feedBack });
+      .fetchFeedback()
+      .then(feedback => {
+        return res.json({ feedback: feedback });
       })
       .catch(e => {
-        console.log('\nError on at feedBackIndex - GET /feedBack', e);
+        console.log('\nError on at feedbackIndex - GET /feedback', e);
         return res.status(400).json({ error: e, code: 'unknownError' });
       });
   }
 
-  async feedBackCreate(req, res) {
+  async feedbackCreate(req, res) {
     const service = new Service(req);
     const {
-      feedBackType, country, givenNames, sureName, email, feedBack, locale
+      feedbackType, country, givenNames, sureName, email, feedback, locale
     } = req.body;
 
-    if ((!feedBackType || !country || !givenNames || !sureName, !feedBack, !locale, !email)) {
+    if ((!feedbackType || !country || !givenNames || !sureName, !feedback, !locale, !email)) {
       return res
         .status(400)
         .json({ error: 'Some information are missing', code: 'missingInformation' });
     }
 
     try {
-      let feedBackObj = await service.createFeedBack({
-        feedBackType,
+      let feedbackObj = await service.createFeedback({
+        feedbackType,
         country,
         givenNames,
         sureName,
         locale,
         email,
-        feedBack
+        feedback
       });
-      await EmailService.sendOrderActivationCode(order);
+      await EmailService.sendFeedback(feedbackObj);
 
-      return res.status(201).send({ order });
+      return res.status(201).send({ feedbackObj });
     } catch (e) {
-      console.log('\nError at POST /orders', e);
+      console.log('\nError at POST /feedbacks', e);
 
       return res.status(400).json({ error: e, code: 'unknownError' });
     }
   }
 }
 
-module.exports = new FeedBackAPIController();
+module.exports = new FeedbackAPIController();

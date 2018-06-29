@@ -12,6 +12,7 @@ const FeedbackSchema = mongoose.Schema(
       required: true,
       index: true
     },
+    travelDocNo: { type: String },
     feedBack: { type: String },
     status: {
       type: String,
