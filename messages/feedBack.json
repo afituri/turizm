@@ -1,0 +1,27 @@
+{
+  "subject": {
+    "enquiry": {
+      "ar": "طلب معلومات",
+      "en": "Enquiry",
+      "tr": "Soruşturma"
+    },
+    "assistance": {
+      "ar": "طلب مساعدة",
+      "en": "Assistance",
+      "tr": "Yardım"
+    },
+    "comment": {
+      "ar": "رأي",
+      "en": "Comment",
+      "tr": "Yorum Yap"
+    }
+  },
+  "country": {
+    "algeria": "algeria@e-visa.com.tr",
+    "libya": "libya@e-visa.com.tr",
+    "iraq": "iraq@e-visa.com.tr"
+  },
+  "templateId-en": "faf30be4-518c-4fdf-8eb1-17564302762d",
+  "templateId-ar": "6cb3a2c7-2a78-49d8-be15-55b9522b854c",
+  "templateId-tr": "e0560cc9-2ba3-4da4-a8a0-6a7d40d8bd88"
+}

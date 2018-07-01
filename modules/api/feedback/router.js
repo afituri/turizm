@@ -6,10 +6,8 @@ module.exports = () => {
 
   router
     .route('/')
-    .get(controller.feedBackIndex)
-    .post(controller.feedBackCreate);
-
-  router.route('/:id').get(controller.feedBackShow);
+    .get(controller.feedbackIndex)
+    .post(controller.feedbackCreate);
 
   return router;
 };

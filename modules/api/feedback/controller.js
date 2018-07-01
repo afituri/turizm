@@ -1,13 +1,13 @@
 const Service = require('./service');
-const EmailService = require('../../../services/emailVerification');
+const EmailService = require('../../../services/emailFeedback');
 
 class FeedbackAPIController {
-  feedbacksIndex(req, res) {
+  feedbackIndex(req, res) {
     const service = new Service(req);
     return service
       .fetchFeedback()
       .then(feedback => {
-        return res.json({ feedback: feedback });
+        return res.json({ feedback });
       })
       .catch(e => {
         console.log('\nError on at feedbackIndex - GET /feedback', e);
@@ -18,30 +18,38 @@ class FeedbackAPIController {
   async feedbackCreate(req, res) {
     const service = new Service(req);
     const {
-      feedbackType, country, givenNames, sureName, email, feedback, locale
+      feedBackType,
+      country,
+      givenNames,
+      sureName,
+      email,
+      feedBack,
+      locale,
+      travelDocNo
     } = req.body;
 
-    if ((!feedbackType || !country || !givenNames || !sureName, !feedback, !locale, !email)) {
+    if ((!feedBackType || !country || !givenNames || !sureName, !feedBack, !locale, !email)) {
       return res
         .status(400)
         .json({ error: 'Some information are missing', code: 'missingInformation' });
     }
 
     try {
-      let feedbackObj = await service.createFeedback({
-        feedbackType,
+      let feedback = await service.createFeedback({
+        feedBackType,
         country,
         givenNames,
         sureName,
         locale,
         email,
-        feedback
+        feedBack,
+        travelDocNo
       });
-      await EmailService.sendFeedback(feedbackObj);
+      await EmailService.sendFeedback(feedback);
 
-      return res.status(201).send({ feedbackObj });
+      return res.status(201).send({ feedback });
     } catch (e) {
-      console.log('\nError at POST /feedbacks', e);
+      console.log('\nError at POST /feedback', e);
 
       return res.status(400).json({ error: e, code: 'unknownError' });
     }
