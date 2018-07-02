@@ -6,41 +6,22 @@ const uniqueValidator = require('mongoose-unique-validator');
 
 const UserSchema = mongoose.Schema(
   {
-    fname: { type: String, required: true },
-    lname: { type: String, required: true },
+    name: { type: String, required: true },
     email: {
       type: String,
       required: true,
       unique: true,
       index: true
     },
-    facebookId: {
-      type: String,
-      required: false,
-      unique: true,
-      sparse: true,
-      index: true
-    },
-    googleId: {
-      type: String,
-      required: false,
-      unique: true,
-      sparse: true,
-      index: true
-    },
     locale: {
       type: String,
-      enum: ['en', 'ar'],
+      enum: ['en', 'ar', 'tr'],
       default: 'ar'
     },
+    admin: { type: Boolean, default: false },
     passwordHash: { type: String, required: false },
     phone: { type: String, required: false },
-    picture: { type: String },
-    status: {
-      type: String,
-      enum: ['inactive', 'active', 'blocked'],
-      default: 'inactive'
-    }
+    token: { type: String }
   },
   {
     timestamps: true
