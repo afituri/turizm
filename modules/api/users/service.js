@@ -81,13 +81,10 @@ class UsersService {
   }
 
   validateUserRegistrationReq(user) {
-    if (user.facebookToken || user.googleToken) {
-      return true;
-    }
     if (!user.email) {
       return { status: 400, error: 'You must provide an email.', code: 'missingEmail' };
     }
-    if (!user.fname || !user.lname) {
+    if (!user.name) {
       return { status: 400, error: 'You must provide your full name.', code: 'missingFullName' };
     }
 
@@ -119,11 +116,6 @@ class UsersService {
       };
     }
     return true;
-  }
-
-  fetchUserTrips(id) {
-    const { Trip } = this.req.models;
-    return Trip.find({ owner: id });
   }
 }
 

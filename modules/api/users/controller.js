@@ -1,10 +1,7 @@
 const Service = require('./service');
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 
 const Auth = require('../../../services/auth');
-const EmailService = require('../../../services/emailVerification');
-const FacebookService = require('../../../services/facebook');
-const GoogleService = require('../../../services/google');
 
 class UsersAPIController {
   me(req, res) {
@@ -20,7 +17,7 @@ class UsersAPIController {
     return service
       .fetchUsers()
       .then(users => {
-        return res.json({ users: users });
+        return res.json({ users });
       })
       .catch(e => {
         console.log('\nError on at usersIndex - GET /users', e);
@@ -48,7 +45,7 @@ class UsersAPIController {
   usersCreate(req, res) {
     const service = new Service(req);
     const {
-      fname, lname, email, password, locale, facebookToken, googleToken
+      name, email, password, locale, admin, phone
     } = req.body;
     const validatedUser = service.validateUserRegistrationReq(req.body);
 
@@ -62,10 +59,14 @@ class UsersAPIController {
       service
         .createUser(data)
         .then(user => {
-          if (!user.facebookId && !user.googleId) {
-            EmailService.sendVerificationEmail(user, 'accountCreation');
-          }
-          return res.status(201).send(Auth.createToken(user));
+          return res.status(201).send(Auth.createToken({
+            _id: user._id,
+            admin: user.admin,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            locale: user.locale
+          }));
         })
         .catch(e => {
           return res
@@ -74,41 +75,13 @@ class UsersAPIController {
         });
     };
 
-    const findOrCreate = (query, data) => {
-      const { User } = req.models;
-      return User.findOne(query).then(user => {
-        if (user) {
-          return res.status(200).send(Auth.createToken(user));
-        }
-        return create(data);
-      });
-    };
-
-    if (facebookToken) {
-      return FacebookService.getUser(facebookToken)
-        .then(data => {
-          findOrCreate({ facebookId: data.facebookId }, { status: 'active', ...data });
-        })
-        .catch(e => {
-          console.log('\nError at POST /api/v1/users', e);
-          res.status(400).json({ error: e, code: 'unknownError' });
-        });
-    } else if (googleToken) {
-      return GoogleService.getUser(googleToken)
-        .then(data => {
-          findOrCreate({ googleId: data.googleId }, { status: 'active', ...data });
-        })
-        .catch(e => {
-          console.log('\nError at POST /api/v1/users', e);
-          res.status(400).json({ error: e, code: 'unknownError' });
-        });
-    }
     return create({
-      fname,
-      lname,
+      admin,
       locale,
       email,
-      password
+      name,
+      password,
+      phone
     });
   }
 
@@ -151,29 +124,19 @@ class UsersAPIController {
         code: 'missingEmailOrPassword'
       });
     }
-    return service.logIn(email, password).then(result => {
-      if (result.error) {
-        return res.status(result.status).json({ error: result.error, code: result.code });
+    return service.logIn(email, password).then(user => {
+      if (user.error) {
+        return res.status(user.status).json({ error: user.error, code: user.code });
       }
-      return res.status(200).send(Auth.createToken(result));
+      return res.status(200).send(Auth.createToken({
+        _id: user._id,
+        admin: user.admin,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        locale: user.locale
+      }));
     });
-  }
-
-  async fetchUserTrips(req, res) {
-    const service = new Service(req);
-    const { id } = req.params;
-    let trips;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid ID', code: 'invalidId' });
-    }
-
-    try {
-      trips = await service.fetchUserTrips(id);
-      return res.status(200).json({ trips });
-    } catch (err) {
-      return res.status(400).json({ error: err, code: 'unknownError' });
-    }
   }
 }
 

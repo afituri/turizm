@@ -1,5 +1,6 @@
 /* eslint-disable */
 const JwtStrategy = require('passport-jwt').Strategy;
+const { jwtSecret } = require('../config');
 
 class JWTStrategy extends JwtStrategy {
   authenticate(req, options) {
@@ -12,7 +13,7 @@ class JWTStrategy extends JwtStrategy {
     }
 
     // Verify the JWT
-    JwtStrategy.JwtVerifier(token, self._secretOrKey, self._verifOpts, function(jwt_err, payload) {
+    JwtStrategy.JwtVerifier(token, jwtSecret, self._verifOpts, function(jwt_err, payload) {
       if (jwt_err) {
         return self.fail(jwt_err);
       } else {

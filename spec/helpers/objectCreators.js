@@ -7,13 +7,12 @@ const { jwtSecret } = require('../../config');
 
 module.exports = {
   user: {
-    fname: 'Erlich',
-    lname: 'Buckman',
+    name: 'Erlich',
     email: 'erlich@buckman.com',
     password: '11111111',
-    picture: '/somephoto',
-    locale: 'en',
-    status: 'active'
+    phone: '093848484894',
+    admin: true,
+    locale: 'en'
   },
   order: {
     applicationType: 'person',

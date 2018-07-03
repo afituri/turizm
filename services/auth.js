@@ -9,11 +9,9 @@ const User = require('./../models/mongoose').User;
 
 class JWTAuth {
   createToken(user) {
-    let id_token = jwt.sign(_.omit(user, 'password'), jwtSecret, {
+    let id_token = jwt.sign(user, jwtSecret, {
       expiresIn: '1h'
     });
-    user = user.toObject();
-    delete user.passwordHash;
     return { user, id_token };
   }
 
