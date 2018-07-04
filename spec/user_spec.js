@@ -58,6 +58,9 @@ describe('User', () => {
       request.get(
         {
           url: `${apiUrl}/users`,
+          headers: {
+            Authorization: `JWT ${token}`
+          },
           qs: {
             page: 0,
             pageSize: 10,

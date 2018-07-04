@@ -8,7 +8,7 @@ module.exports = () => {
   router
     .route('/')
     .post(controller.usersCreate)
-    .get(controller.usersIndex);
+    .get(isUser, controller.usersIndex);
 
   router.route('/login').post(controller.loginUser);
 
