@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+var mongoosePaginate = require('mongoose-paginate');
 const bcrypt = require('bcrypt');
 const md5 = require('md5');
 const uuid = require('uuid/v4');
@@ -29,6 +30,7 @@ const UserSchema = mongoose.Schema(
 );
 
 UserSchema.plugin(uniqueValidator);
+UserSchema.plugin(mongoosePaginate);
 
 UserSchema.virtual('password').get(function () {
   return this.passwordHash;

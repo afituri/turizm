@@ -5,7 +5,10 @@ const { isUser } = require('../../../middleware/auth');
 module.exports = () => {
   const router = express.Router();
 
-  router.route('/').post(controller.usersCreate);
+  router
+    .route('/')
+    .post(controller.usersCreate)
+    .get(controller.usersIndex);
 
   router.route('/login').post(controller.loginUser);
 

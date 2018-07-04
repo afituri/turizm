@@ -15,7 +15,7 @@ class UsersAPIController {
     const service = new Service(req);
 
     return service
-      .fetchUsers()
+      .fetchUsers(req.query)
       .then(users => {
         return res.json({ users });
       })

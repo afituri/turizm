@@ -54,6 +54,40 @@ describe('User', () => {
   // Authentication Routes
   // ----------------------------------------
   describe('Registration Route', () => {
+    it('gets all orders', done => {
+      request.get(
+        {
+          url: `${apiUrl}/users`,
+          qs: {
+            page: 0,
+            pageSize: 10,
+            sorted: [
+              {
+                id: 'name',
+                desc: true
+              }
+            ],
+            filtered: [
+              {
+                id: 'locale',
+                value: 'en'
+              },
+              {
+                id: 'admin',
+                value: true
+              }
+            ]
+          }
+        },
+        (err, res, body) => {
+          body = JSON.parse(body);
+          expect(res.statusCode).toBe(200);
+          expect(body.users.docs[0]._id).toBe(user._id.toString());
+          done();
+        }
+      );
+    });
+
     // Registers new user
     it('adds a new user when they register', done => {
       request.post(

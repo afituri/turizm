@@ -28,7 +28,6 @@ class OrdersService {
       limit: parseInt(pageSize, 10),
       sort
     };
-
     return Order.paginate(query, options);
   }
 
