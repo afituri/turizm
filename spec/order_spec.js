@@ -307,45 +307,45 @@ describe('Order', () => {
     );
   });
 
-  it('fails to create a an algerian with out of age order', done => {
-    request.post(
-      {
-        url: `${apiUrl}/orders`,
-        form: {
-          applicationType: 'person',
-          country: 'algeria',
-          travelDocument: 'ordinary',
-          arrivalDate: new Date(),
-          locale: 'en',
-          people: [
-            {
-              givenNames: 'Ahmed Ali',
-              sureName: 'Salem',
-              dob: moment({ years: 1980, months: 3, days: 5 }).toJSON(),
-              pob: 'Buckarest',
-              gender: 'male',
-              motherName: 'Sara',
-              fatherName: 'Omran',
-              passportNumber: 'L34UFKES',
-              passportIssueDate: moment({ years: 2013, months: 3, days: 5 }).toJSON(),
-              passportExpiryDate: moment({ years: 2017, months: 3, days: 5 }).toJSON(),
-              passportPhoto: '/somephoto2',
-              email: 'ahmed.fituri@gmail.com',
-              phoneNumber: '00903883838834',
-              address: 'Some Address2',
-              photo: '/somephoto3'
-            }
-          ]
-        }
-      },
-      (err, res, body) => {
-        body = JSON.parse(body);
-        expect(res.statusCode).toBe(400);
-        expect(body.code).toBe('invalidAlgerian');
-        done();
-      }
-    );
-  });
+  // it('fails to create a an algerian with out of age order', done => {
+  //   request.post(
+  //     {
+  //       url: `${apiUrl}/orders`,
+  //       form: {
+  //         applicationType: 'person',
+  //         country: 'algeria',
+  //         travelDocument: 'ordinary',
+  //         arrivalDate: new Date(),
+  //         locale: 'en',
+  //         people: [
+  //           {
+  //             givenNames: 'Ahmed Ali',
+  //             sureName: 'Salem',
+  //             dob: moment({ years: 1980, months: 3, days: 5 }).toJSON(),
+  //             pob: 'Buckarest',
+  //             gender: 'male',
+  //             motherName: 'Sara',
+  //             fatherName: 'Omran',
+  //             passportNumber: 'L34UFKES',
+  //             passportIssueDate: moment({ years: 2013, months: 3, days: 5 }).toJSON(),
+  //             passportExpiryDate: moment({ years: 2017, months: 3, days: 5 }).toJSON(),
+  //             passportPhoto: '/somephoto2',
+  //             email: 'ahmed.fituri@gmail.com',
+  //             phoneNumber: '00903883838834',
+  //             address: 'Some Address2',
+  //             photo: '/somephoto3'
+  //           }
+  //         ]
+  //       }
+  //     },
+  //     (err, res, body) => {
+  //       body = JSON.parse(body);
+  //       expect(res.statusCode).toBe(400);
+  //       expect(body.code).toBe('invalidAlgerian');
+  //       done();
+  //     }
+  //   );
+  // });
 
   it('activates an order', done => {
     request.get(

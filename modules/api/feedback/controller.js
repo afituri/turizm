@@ -5,7 +5,7 @@ class FeedbackAPIController {
   feedbackIndex(req, res) {
     const service = new Service(req);
     return service
-      .fetchFeedback()
+      .fetchFeedback(req.query)
       .then(feedback => {
         return res.json({ feedback });
       })

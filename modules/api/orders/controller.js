@@ -73,13 +73,13 @@ class OrdersAPIController {
         .json({ error: validatePeople.error, code: validatePeople.code });
     }
 
-    const validateAlgerian = service.validateAlgerian(applicationType, country, people[0].dob);
+    // const validateAlgerian = service.validateAlgerian(applicationType, country, people[0].dob);
 
-    if (validateAlgerian.error) {
-      return res
-        .status(validateAlgerian.status)
-        .json({ error: validateAlgerian.error, code: validateAlgerian.code });
-    }
+    // if (validateAlgerian.error) {
+    //   return res
+    //     .status(validateAlgerian.status)
+    //     .json({ error: validateAlgerian.error, code: validateAlgerian.code });
+    // }
 
     const peopleLst = people.map(person => {
       return Object.assign({}, person, {
